@@ -23,20 +23,25 @@ glabel onDDPress
 	lw $t0, %lo(gMarioObject)($t0)
 	sw $t1, 0x14($t0) # .header.gfx.sharedChild
 
+	# Change the THI reds cave texture at segmented 0x09001800
 	lui $s0, %hi(sSwappedTextures)
 	addiu $s0, $s0, %lo(sSwappedTextures)
 	lw $t1, 0x00($s0)
 	bnez $t1, onDDPress_swapTexturesEnd
 
-	# Change the THI reds cave texture at segmented 0x09001800
+	lui $t1, %hi(sTransition)
+	addiu $t1, $t1, %lo(sTransition)
+	lw $a3, 0x00($t1)
+	addiu $a3, $a3, 1
+	sw $a3, 0x00($t1)
+
 	li $a0, 0x09001800
 	lui $a1, %hi(sTHITexture)
 	addiu $a1, $a1, %lo(sTHITexture)
 	li $a2, 0x2020	# 32 x 32
-	li $a3, 0x02	# rgba16 has 2 bytes per pixel
 	jal swapTextures
 
-	li $v0, 0x00($s0)
+	sw $v0, 0x00($s0)
 onDDPress_swapTexturesEnd:
 
 onDDPress_ret:
@@ -45,5 +50,11 @@ onDDPress_ret:
 	addiu $sp, $sp, 8
 	jr $ra
 
+glabel sTransition
+	.word 0x00000000
+
 glabel sSwappedTextures
 	.word 0x00000000
+
+glabel sTHITexture
+	.incbin "skazzy.rgba16"

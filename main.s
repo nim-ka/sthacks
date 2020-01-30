@@ -20,9 +20,7 @@ glabel sRanInit
 
 glabel sDebug
 	.word 0x00000000
-
-glabel sTHITexture
-	.incbin "skazzy.rgba16"
+	.word 0x00000000
 
 glabel sEnd
-	.word 0x00000000
+	.word 0xEEEEEEEE

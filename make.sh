@@ -6,7 +6,7 @@ echo "Preparing..."
 
 for i in *.png; do
 	bin="${i%.*}"
-	n64graphics -i "$bin" -g "$i" -f "${bin##*.}"
+	./n64graphics -i "$bin" -g "$i" -f "${bin##*.}"
 done
 
 echo "Unzipping..."
