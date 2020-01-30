@@ -59,6 +59,12 @@ swapTextures_heightLoop:
 	slt $t1, $s1, $s5
 	bnez $t0, swapTextures_copy
 	bnez $t1, swapTextures_copy
+	subu $t0, $s6, $s0
+	subu $t1, $s7, $s1
+	slt $t0, $t0, $s5
+	slt $t1, $t1, $s5
+	bnez $t0, swapTextures_copy
+	bnez $t1, swapTextures_copy
 
 	li $s2, 0
 	b swapTextures_copyEnd

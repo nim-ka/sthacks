@@ -24,6 +24,11 @@ glabel onDDPress
 	sw $t1, 0x14($t0) # .header.gfx.sharedChild
 
 	# Change the THI reds cave texture at segmented 0x09001800
+	lui $t0, %hi(gGlobalTimer)
+	lw $t0, %lo(gGlobalTimer)($t0)
+	andi $t0, $t0, 0x3
+	beqz $t0, onDDPress_swapTexturesEnd
+
 	lui $s0, %hi(sSwappedTextures)
 	addiu $s0, $s0, %lo(sSwappedTextures)
 	lw $t1, 0x00($s0)

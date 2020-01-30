@@ -2,6 +2,7 @@
 .set gMarioState, 0x8032D93C
 .set gMarioObject, 0x80361158
 .set gLoadedGraphNodes, 0x8032DDC4
+.set gGlobalTimer, 0x8032D5D4
 
 .set sGravity, 0x8025699E
 .set sDisableStarSelectInst, 0x8024BF9C
