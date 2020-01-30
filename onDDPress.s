@@ -23,12 +23,10 @@ glabel onDDPress
 	lw $t0, %lo(gMarioObject)($t0)
 	sw $t1, 0x14($t0) # .header.gfx.sharedChild
 
-	lui $t0, %hi(sSwappedTextures)
-	addiu $t0, $t0, %lo(sSwappedTextures)
-	lw $t1, 0x00($t0)
+	lui $s0, %hi(sSwappedTextures)
+	addiu $s0, $s0, %lo(sSwappedTextures)
+	lw $t1, 0x00($s0)
 	bnez $t1, onDDPress_swapTexturesEnd
-	li $t1, 1
-	sw $t1, 0x00($t0)
 
 	# Change the THI reds cave texture at segmented 0x09001800
 	li $a0, 0x09001800
@@ -37,7 +35,8 @@ glabel onDDPress
 	li $a2, 0x2020	# 32 x 32
 	li $a3, 0x02	# rgba16 has 2 bytes per pixel
 	jal swapTextures
-bkpt
+
+	li $v0, 0x00($s0)
 onDDPress_swapTexturesEnd:
 
 onDDPress_ret:
