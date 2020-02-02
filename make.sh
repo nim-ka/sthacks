@@ -2,7 +2,7 @@
 ENTRY=0x80400000
 FILE=main.s
 
-echo "Preparing..."
+echo "Preparing images..."
 
 for i in *.png; do
 	bin="${i%.*}"
@@ -30,15 +30,18 @@ printf "%s" "$DISASM" > a.out.s
 mips-linux-gnu-objcopy -O binary --only-section=.text a.out tmp.out
 rm a.out
 
+xxd -c 4 tmp.out | awk '{ print $2 $3 }' > tmp2.out
+rm tmp.out
+
 echo "Byteswapping..."
 
-BYTESWAP="$(node -e 'console.log(`'"$(xxd -c 4 tmp.out | awk '{ print $2 $3 }')"'`.split`\n`.map(e => e.match(/.{2}/g).reverse().join``).join`\n`)')"
-rm tmp.out
-#printf "$BYTESWAP"
+node -e 'console.log(fs.readFileSync("tmp2.out").toString().split`\n`.filter(e => e).map(e => e.match(/.{2}/g).reverse().join``).join`\n`)' > tmp3.out
+rm tmp2.out
 
 echo "Injecting..."
 
-node -e 'code = `'"$BYTESWAP"'`.split`\n`.map(e => e.match(/.{2}/g).map(f => parseInt(f, 16))).reduce((a, b) => [...a, ...b]); fs = require("fs"); st = fs.readFileSync("tmp"); for (i = 0; i < code.length; i++) st[i + ('"$ENTRY"' - 0x80000000) + 0x1B0] = code[i]; fs.writeFileSync("tmp", st)'
+node -e 'code = [].concat(...fs.readFileSync("tmp3.out").toString().split`\n`.filter(e => e).map(e => e.match(/.{2}/g).map(f => parseInt(f, 16)))); st = fs.readFileSync("tmp"); for (i = 0; i < code.length; i++) st[i + ('"$ENTRY"' - 0x80000000) + 0x1B0] = code[i]; fs.writeFileSync("tmp", st)'
+rm tmp3.out
 
 echo "Zipping..."
 

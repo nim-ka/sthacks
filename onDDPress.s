@@ -26,8 +26,8 @@ glabel onDDPress
 	# Change the THI reds cave texture at segmented 0x09001800
 	lui $t0, %hi(gGlobalTimer)
 	lw $t0, %lo(gGlobalTimer)($t0)
-	andi $t0, $t0, 0x3
-	beqz $t0, onDDPress_swapTexturesEnd
+	andi $t0, $t0, 0x1
+	bnez $t0, onDDPress_swapTexturesEnd
 
 	lui $s0, %hi(sSwappedTextures)
 	addiu $s0, $s0, %lo(sSwappedTextures)
@@ -40,7 +40,8 @@ glabel onDDPress
 	addiu $a3, $a3, 1
 	sw $a3, 0x00($t1)
 
-	li $a0, 0x09001800
+	li $a0, 0x09001800 # THI cave
+#	li $a0, 0x08011A90 # Crazy box
 	lui $a1, %hi(sTHITexture)
 	addiu $a1, $a1, %lo(sTHITexture)
 	li $a2, 0x2020	# 32 x 32
@@ -62,4 +63,7 @@ glabel sSwappedTextures
 	.word 0x00000000
 
 glabel sTHITexture
-	.incbin "skazzy.rgba16"
+	.incbin "ergc2.rgba16"
+
+.include "xander/model.s"
+.include "xander/geo.s"
