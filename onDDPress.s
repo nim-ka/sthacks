@@ -17,7 +17,7 @@ glabel onDDPress
 	# Change Mario's model
 	lui $t0, %hi(gLoadedGraphNodes)
 	lw $t0, %lo(gLoadedGraphNodes)($t0)
-	lw $t1, 0x208($t0) # MODEL_BREAKABLE_BOX_SMALL * 4
+	lw $t1, 0x58($t0) # MODEL_THI_WARP_PIPE * 4
 
 	lui $t0, %hi(gMarioObject)
 	lw $t0, %lo(gMarioObject)($t0)
@@ -41,7 +41,6 @@ glabel onDDPress
 	sw $a3, 0x00($t1)
 
 	li $a0, 0x09001800 # THI cave
-#	li $a0, 0x08011A90 # Crazy box
 	lui $a1, %hi(sTHITexture)
 	addiu $a1, $a1, %lo(sTHITexture)
 	li $a2, 0x2020	# 32 x 32

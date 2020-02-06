@@ -13,10 +13,7 @@ hook_checkInit:
 hook_checkInitEnd:
 
 hook_update:
-	# Set gravity to 4.0f (default)
-	li $t0, 0x4080
-	lui $t1, %hi(sGravity)
-	sh $t0, %lo(sGravity)($t1)
+	jal loop
 
 hook_checkZ:
 	lui $t0, %hi(gPlayer1Controller)

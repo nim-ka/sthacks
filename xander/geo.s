@@ -10,3 +10,5 @@ glabel xander_geo
 	.word	83886080
 	.word	83886080
 	.word	16777216
+
+glabel xander_geo_end

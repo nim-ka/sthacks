@@ -10,7 +10,7 @@ nop
 .include "lib.s"
 
 .include "init.s"
-
+.include "loop.s"
 .include "onZPress.s"
 .include "onDUPress.s"
 .include "onDDPress.s"

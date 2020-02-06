@@ -57544,3 +57544,5 @@ glabel xander_dl_opaque
 	.word	0
 	.word	-1207959552
 	.word	0
+
+glabel xander_dl_opaque_end

@@ -4,9 +4,8 @@ glabel setDebug
 	sw $s7, 0x00($sp)
 	sw $s8, 0x04($sp)
 
-	lui $s7, %hi(sDebug)
-	addiu $s7, $s7, %lo(sDebug)
-	sw $v0, 0x00($s7)
+	li $s7, sDebug
+	sw $ra, 0x00($s7)
 	lw $s8, 0x04($s7)
 	addiu $s8, $s8, 1
 	sw $s8, 0x04($s7)
