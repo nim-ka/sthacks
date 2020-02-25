@@ -49,6 +49,17 @@ glabel onDDPress
 	sw $v0, 0x00($s0)
 onDDPress_swapTexturesEnd:
 
+	li $a0, 0xF1 # Death node
+	jal area_get_warp_node
+	beqz $v0, onDDPress_ret
+
+	li $t0, 0x19 # destLevel
+	li $t1, 0x00 # destArea
+	li $t2, 0xFA # destNode
+	sb $t0, 0x01($v0)
+	sb $t1, 0x02($v0)
+	sb $t2, 0x03($v0)
+
 onDDPress_ret:
 	lw $s0, 0x04($sp)
 	lw $ra, 0x00($sp)

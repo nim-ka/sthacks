@@ -14,6 +14,8 @@ nop
 .include "onZPress.s"
 .include "onDUPress.s"
 .include "onDDPress.s"
+.include "onDLPress.s"
+.include "onDRPress.s"
 
 glabel sRanInit
 	.word 0x00000000
