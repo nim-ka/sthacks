@@ -9,9 +9,13 @@ for i in *.png; do
 	./n64graphics -i "$bin" -g "$i" -f "${bin##*.}"
 done
 
-for i in *.aifc; do
+for i in *.aiff; do
+	aifc="${i%.*}.aifc"
 	bin="${i%.*}.bin"
-	dd if="$i" of="$bin" bs=192 skip=1
+
+	./vadpcm_enc -c thankyou.table "$i" "$aifc"
+	dd if="$aifc" of="$bin" bs=192 skip=1
+	rm "$aifc"
 done
 
 echo "Unzipping..."
@@ -45,7 +49,8 @@ rm tmp2.out
 
 echo "Injecting..."
 
-node -e 'code = [].concat(...fs.readFileSync("tmp3.out").toString().split`\n`.filter(e => e).map(e => e.match(/.{2}/g).map(f => parseInt(f, 16)))); st = fs.readFileSync("tmp"); for (i = 0; i < code.length; i++) st[i + ('"$ENTRY"' - 0x80000000) + 0x1B0] = code[i]; fs.writeFileSync("tmp", st)'
+#node -e 'code = [].concat(...fs.readFileSync("tmp3.out").toString().split`\n`.filter(e => e).map(e => e.match(/.{2}/g).map(f => parseInt(f, 16)))); st = fs.readFileSync("tmp"); for (i = 0; i < code.length; i++) st[i + ('"$ENTRY"' - 0x80000000) + 0x1B0] = code[i]; fs.writeFileSync("tmp", st)'
+node -e 'code = fs.readFileSync("tmp3.out").toString().split`\n`.filter(e => e).map(e => e.match(/.{2}/g).map(f => parseInt(f, 16))); st = fs.readFileSync("tmp"); for (i = 0; i < code.length; i++) for (j = 0; j < 4; j++) st[(i * 4 + j) + ('"$ENTRY"' - 0x80000000) + 0x1B0] = code[i][j]; fs.writeFileSync("tmp", st)'
 rm tmp3.out
 
 echo "Zipping..."

@@ -1,5 +1,6 @@
 *.map
 *.out*
 *.rgba16
+*.aifc
 *.bin
 current_unzipped_st
