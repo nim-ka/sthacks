@@ -1,4 +1,5 @@
 *.map
 *.out*
 *.rgba16
+*.bin
 current_unzipped_st
