@@ -2,11 +2,16 @@
 ENTRY=0x80400000
 FILE=main.s
 
-echo "Preparing images..."
+echo "Preparing assets..."
 
 for i in *.png; do
 	bin="${i%.*}"
 	./n64graphics -i "$bin" -g "$i" -f "${bin##*.}"
+done
+
+for i in *.aifc; do
+	bin="${i%.*}.bin"
+	dd if="$i" of="$bin" bs=192 skip=1
 done
 
 echo "Unzipping..."
