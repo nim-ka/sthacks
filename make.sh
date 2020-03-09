@@ -6,16 +6,25 @@ echo "Preparing assets..."
 
 for i in *.png; do
 	bin="${i%.*}"
-	./n64graphics -i "$bin" -g "$i" -f "${bin##*.}"
+	tools/n64graphics -i "$bin" -g "$i" -f "${bin##*.}"
 done
 
 for i in *.aiff; do
+	aiff="_$i"
 	aifc="${i%.*}.aifc"
 	bin="${i%.*}.bin"
+	table="${i%.*}.table"
 
-	./vadpcm_enc -c thankyou.table "$i" "$aifc"
+	ffmpeg -y -i "$i" -ar 16000 "$aiff"
+
+	tools/aiff_extract_codebook "$aiff" > "$table"
+
+	tools/vadpcm_enc -c "$table" "$aiff" "$aifc"
 	dd if="$aifc" of="$bin" bs=192 skip=1
-	rm "$aifc"
+
+	dd if="$aifc" of=tmpa bs=112 skip=1; xxd tmpa | head -4 | xxd -r > "$table.bin"; rm tmpa
+
+	rm "$aiff" "$aifc" "$table"
 done
 
 echo "Unzipping..."

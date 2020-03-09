@@ -10,6 +10,8 @@
 .set sGravity, 0x8025699E
 .set sDisableStarSelectInst, 0x8024BF9C
 .set sDMASampleDataJalInst, 0x80315994
+.set sLoopEnd, 0x801F2764
+.set sCodebook, 0x801F2710
 
 .set area_get_warp_node, 0x8027A9C8
 .set segmented_to_virtual, 0x80277F50

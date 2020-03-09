@@ -19,8 +19,42 @@ glabel loop
 	beqz $t0, loop_ret
 	sw $t1, 0x14($t0) # .header.gfx.sharedChild
 
+	# Hack the instrument metadata for the credits sound
+	lui $t0, 0x000E
+	ori $t0, $t0, 0xA600 # 0xEA600 = 960000 = 60s * 16000 Hz
+
+	lui $t1, %hi(sLoopEnd)
+	sw $t0, %lo(sLoopEnd)($t1)
+
+	lui $t0, %hi(audio_hijack_book)
+	addiu $t0, $t0, %lo(audio_hijack_book)
+
+	lui $t1, %hi(sCodebook)
+	addiu $t1, $t1, %lo(sCodebook)
+
+	li $t2, 20
+loop_hack_loop:
+	beqz $t2, loop_hack_loop_end
+
+	lw $t3, 0x00($t0)
+	sw $t3, 0x00($t1)
+
+	addiu $t0, $t0, 4
+	addiu $t1, $t1, 4
+
+	addiu $t2, $t2, -1
+	b loop_hack_loop
+loop_hack_loop_end:
+
 loop_ret:
 	lw $s0, 0x04($sp)
 	lw $ra, 0x00($sp)
 	addiu $sp, $sp, 8
 	jr $ra
+
+glabel audio_hijack_book
+	.word 0x00000002         # s32 order
+	.word 0x00000002         # s32 npredictors
+	.incbin "audio_hijack.table.bin"
+	.word 0x00000000
+	.word 0x00000000
