@@ -11,21 +11,16 @@ glabel loop
 	# Reset Mario's model
 	lui $t0, %hi(gLoadedGraphNodes)
 	lw $t0, %lo(gLoadedGraphNodes)($t0)
-	beqz $t0, loop_ret
+	beqz $t0, loop_mario_end
 	lw $t1, 0x04($t0) # MODEL_MARIO * 4
 
 	lui $t0, %hi(gMarioObject)
 	lw $t0, %lo(gMarioObject)($t0)
-	beqz $t0, loop_ret
+	beqz $t0, loop_mario_end
 	sw $t1, 0x14($t0) # .header.gfx.sharedChild
+loop_mario_end:
 
 	# Hack the instrument metadata for the credits sound
-	lui $t0, 0x000E
-	ori $t0, $t0, 0xA600 # 0xEA600 = 960000 = 60s * 16000 Hz
-
-	lui $t1, %hi(sLoopEnd)
-	sw $t0, %lo(sLoopEnd)($t1)
-
 	lui $t0, %hi(audio_hijack_book)
 	addiu $t0, $t0, %lo(audio_hijack_book)
 
