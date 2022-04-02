@@ -9,8 +9,9 @@ glabel dma_sample_data_hack
 	slt $t1, $a0, $t3
 	and $t0, $t0, $t1
 	beqz $t0, dma_sample_data_start
-	lui $v0, %hi(audio_hijack_data)
-	addiu $v0, $v0, %lo(audio_hijack_data)
+	lui $v0, %hi(sGustyStartDataPtr)
+	lw $v0, %lo(sGustyStartDataPtr)($v0)
+	lw $v0, ($v0)
 	subu $t0, $a0, $t2
 	addu $v0, $v0, $t0
 	jr $ra

@@ -77,8 +77,8 @@ swapTextures_copy:
 
 	addu $a0, $t2, $s8
 	addu $a1, $t2, $s3
-	li $a2, 2
-	jal memcpy
+	lh $t0, ($a1)
+	sh $t0, ($a0)
 swapTextures_copyEnd:
 
 	addiu $s1, $s1, 1
@@ -103,3 +103,160 @@ swapTextures_ret:
 	lw $s8, 0x24($sp)
 	addiu $sp, $sp, 0x28
 	jr $ra
+
+glabel swapTextures2
+	addiu $sp, $sp, -0x28
+	sw $ra, 0x00($sp)
+	sw $s0, 0x04($sp)
+	sw $s1, 0x08($sp)
+	sw $s2, 0x0C($sp)
+	sw $s3, 0x10($sp)
+	sw $s4, 0x14($sp)
+	sw $s5, 0x18($sp)
+	sw $s6, 0x1C($sp)
+	sw $s7, 0x20($sp)
+	sw $s8, 0x24($sp)
+
+	move $s3, $a1   	# src
+	move $s4, $a2   	# size
+	move $s5, $a3   	# transition timer
+
+	srl $s6, $a2, 8     	# width
+	andi $s7, $a2, 0x00FF	# height
+
+	jal segmented_to_virtual
+	move $s8, $v0       	# virtual addr
+
+	li $s2, 1            	# return
+
+	move $s0, $zero
+swapTextures2_widthLoop:
+	beq $s0, $s6, swapTextures2_widthLoopEnd
+
+	move $s1, $zero
+swapTextures2_heightLoop:
+	beq $s1, $s7, swapTextures2_heightLoopEnd
+
+	# Only modify if within the transition timer
+	slt $t0, $s0, $s5
+	bnez $t0, swapTextures2_copy
+
+	li $s2, 0
+	b swapTextures2_copyEnd
+
+swapTextures2_copy:
+	# offset = t2 = (s1 * width + s0) * 2
+	mult $s1, $s6
+	mflo $t2
+	addu $t2, $t2, $s0
+	sll $t2, $t2, 1
+
+	addu $a0, $t2, $s8
+	addu $a1, $t2, $s3
+	lh $t0, ($a1)
+	sh $t0, ($a0)
+swapTextures2_copyEnd:
+
+	addiu $s1, $s1, 1
+	b swapTextures2_heightLoop
+swapTextures2_heightLoopEnd:
+
+	addiu $s0, $s0, 1
+	b swapTextures2_widthLoop
+swapTextures2_widthLoopEnd:
+
+swapTextures2_ret:
+	move $v0, $s2
+	lw $ra, 0x00($sp)
+	lw $s0, 0x04($sp)
+	lw $s1, 0x08($sp)
+	lw $s2, 0x0C($sp)
+	lw $s3, 0x10($sp)
+	lw $s4, 0x14($sp)
+	lw $s5, 0x18($sp)
+	lw $s6, 0x1C($sp)
+	lw $s7, 0x20($sp)
+	lw $s8, 0x24($sp)
+	addiu $sp, $sp, 0x28
+	jr $ra
+
+glabel swapTextures3
+	addiu $sp, $sp, -0x28
+	sw $ra, 0x00($sp)
+	sw $s0, 0x04($sp)
+	sw $s1, 0x08($sp)
+	sw $s2, 0x0C($sp)
+	sw $s3, 0x10($sp)
+	sw $s4, 0x14($sp)
+	sw $s5, 0x18($sp)
+	sw $s6, 0x1C($sp)
+	sw $s7, 0x20($sp)
+	sw $s8, 0x24($sp)
+
+	move $s4, $a2   	# size
+	move $s5, $a3   	# transition timer
+
+#	srl $s6, $a2, 8     	# width
+#	andi $s7, $a2, 0x00FF	# height
+
+	li $s6, 32
+	li $s7, 64
+
+	jal segmented_to_virtual
+	move $s8, $v0       	# virtual addr
+	addiu $s3, $v0, 2   	# src
+
+	li $s2, 1            	# return
+
+	move $s0, $zero
+swapTextures3_widthLoop:
+	beq $s0, $s6, swapTextures3_widthLoopEnd
+
+	move $s1, $zero
+swapTextures3_heightLoop:
+	beq $s1, $s7, swapTextures3_heightLoopEnd
+
+	# Only modify if within the transition timer
+	slt $t0, $s0, $s5
+	bnez $t0, swapTextures3_copy
+
+	li $s2, 0
+	b swapTextures3_copyEnd
+
+swapTextures3_copy:
+	# offset = t2 = (s1 * width + s0) * 2
+#	mult $s1, $s6
+#	mflo $t2
+	sll $t2, $s1, 5
+	addu $t2, $t2, $s0
+	sll $t2, $t2, 1
+
+	addu $a0, $t2, $s8
+	addiu $a1, $a0, 2
+	lh $t0, ($a1)
+	sh $t0, ($a0)
+swapTextures3_copyEnd:
+
+	addiu $s1, $s1, 1
+	b swapTextures3_heightLoop
+swapTextures3_heightLoopEnd:
+
+	addiu $s0, $s0, 1
+	b swapTextures3_widthLoop
+swapTextures3_widthLoopEnd:
+
+swapTextures3_ret:
+	move $v0, $s2
+	lw $ra, 0x00($sp)
+	lw $s0, 0x04($sp)
+	lw $s1, 0x08($sp)
+	lw $s2, 0x0C($sp)
+	lw $s3, 0x10($sp)
+	lw $s4, 0x14($sp)
+	lw $s5, 0x18($sp)
+	lw $s6, 0x1C($sp)
+	lw $s7, 0x20($sp)
+	lw $s8, 0x24($sp)
+	addiu $sp, $sp, 0x28
+	jr $ra
+

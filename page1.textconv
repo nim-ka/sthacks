@@ -1,0 +1,21 @@
+glabel sPage1
+#	.byte _("The quick brown fox jumped over the soweli pi wile ala. blah blah blah blah blah blah blah")
+
+#	.ascii "                        \n"
+	.ascii "HEY! ALEX HERE. WITH THE\n"
+	.ascii "EPIC NEW COMP/ I THOUGHT\n"
+	.ascii "IT MIGHT BE COOL TO SHOW\n"
+	.ascii "YOU GUYS SOME OF THE NEW\n"
+	.ascii "TASES FROM 2021 AND 2022\n"
+	.ascii "THAT YOU MIGHTVE MISSED!\n"
+	.ascii "A HIGHLIGHT REEL P MUCH.\n"
+	.ascii "HERE'RE A FEW OF MY FAVE\n"
+	.ascii "SHORT TASES FROM '21&22.\n"
+	.ascii "     ENJOY THE SHOW!    \n"
+
+	.word 0x00000000
+glabel sPage1End
+
+glabel sText
+	.fill (sPage1End - sPage1), 1, 0x00
+	.word 0xFFFFFFFF

@@ -6,11 +6,20 @@
 .set sLevelPool, 0x8038B8A0
 .set LevelScriptJumpTable, 0x8038B8B8
 .set sCurrentCmd, 0x8038BE28
+.set gCurrLevelNum, 0x8032DDF8
+.set gControllerPads, 0x8033AFF8
+.set gTTCSpeedSetting, 0x80361258
+.set gRandomSeed16, 0x8038EEE0
+.set gDisplayListHead, 0x8033B06C
+.set gCurrentArea, 0x8032DDCC
 
 .set sGravity, 0x8025699E
 .set sDisableStarSelectInst, 0x8024BF9C
 .set sDMASampleDataJalInst, 0x80315994
 .set sCodebook, 0x801F2710
+.set sSoundLengthInst, 0x8031C858
+.set sPrintTextHackInst, 0x802D69E0
+.set sEndScreenSoundInst, 0x8024BFBC
 
 .set area_get_warp_node, 0x8027A9C8
 .set segmented_to_virtual, 0x80277F50
@@ -18,6 +27,30 @@
 .set bcopy, 0x80324910
 .set memcpy, 0x803273F0
 .set process_geo_layout, 0x8037E0B4
+.set level_trigger_warp, 0x8024A9CC
+.set warp_special, 0x8024978C
+.set play_cutscene_music, 0x802492D0
+.set lvl_play_the_end_screen_sound, 0x8024BFA0
+.set vec3s_set, 0x8037897C
+.set print_generic_string, 0x802D77DC
+.set print_text, 0x802D6554
+.set initiate_warp, 0x8024A700
+.set lvl_init_or_update, 0x8024BCD8
+.set set_background_music, 0x80249178
+.set play_sound, 0x8031EB00
+.set drop_queued_background_music, 0x80321D38
+.set fadeout_level_music, 0x8024927C
+.set play_music, 0x803219AC
+.set disable_background_sound, 0x80248D78
+.set set_play_mode, 0x80249764
+.set save_file_collect_star_or_key, 0x80279C44
+.set save_file_set_star_flags, 0x8027A23C
+.set save_file_set_flags, 0x8027A0A8
+.set bhv_spawned_star_loop, 0x802AB1C8
+.set play_race_fanfare, 0x803221B8
+.set seq_player_play_sequence, 0x80320544
+.set try_print_debug_mario_level_info, 0x802CB1C0
+.set dma_sample_data, 0x80318300
 
 .set gCurrAudioFrameDmaCount, 0x80226B84
 .set gCurrAudioFrameDmaIoMesgBufs, 0x80225E00
@@ -28,7 +61,7 @@
 .set sSampleDmaListSize1, 0x8022693C
 .set sSampleDmaReuseQueue1, 0x80226948
 .set sSampleDmaReuseQueue2, 0x80226A48
-.set sSampleDmaReuseQueueHead2, 0x80226B4b
+.set sSampleDmaReuseQueueHead2, 0x80226B4B
 .set sSampleDmaReuseQueueTail1, 0x80226B48
 .set sSampleDmaReuseQueueTail2, 0x80226B49
 .set sSampleDmas, 0x80226338

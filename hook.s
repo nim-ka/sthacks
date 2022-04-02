@@ -7,6 +7,9 @@ glabel hook
 	lw $s0, %lo(gPlayer1Controller)($s0)
 	lw $s0, 0x12($s0) # buttonPressed
 
+	lui $s0, %hi(gControllerPads)
+	lh $s0, %lo(gControllerPads)($s0)
+
 hook_checkInit:
 	lui $t0, %hi(sRanInit)
 	lw $t0, %lo(sRanInit)($t0)
@@ -21,11 +24,11 @@ hook_checkInitEnd:
 hook_update:
 	jal loop
 
-hook_checkZ:
-	andi $t1, $s0, 0x2000
-	beqz $t1, hook_checkZEnd
-	jal onZPress
-hook_checkZEnd:
+hook_checkL:
+	andi $t1, $s0, 0x0020
+	beqz $t1, hook_checkLEnd
+	jal onLPress
+hook_checkLEnd:
 
 hook_checkDU:
 	andi $t1, $s0, 0x0800
@@ -50,6 +53,8 @@ hook_checkDR:
 	beqz $t1, hook_checkDREnd
 	jal onDRPress
 hook_checkDREnd:
+
+	jal play_tas
 
 hook_ret:
 	lw $s0, 0x04($sp)

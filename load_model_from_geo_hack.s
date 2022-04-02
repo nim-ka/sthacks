@@ -16,9 +16,9 @@ glabel load_model_from_geo_hack
 	nop
 	beqz $at,level_cmd_load_model_from_geo_L60
 
-	li $a1, 0x16000388 # warp_pipe_geo
+	li $a1, 0x0d0000d0 # koopa_without_shell_geo
 	bne $t9, $a1, level_cmd_load_model_from_geo_load
-	li $a0, 0x16
+	li $a0, 0x0d
 	lui $a1, %hi(xander_geo)
 	addiu $a1, $a1, %lo(xander_geo)
 	jal virtual_to_segmented

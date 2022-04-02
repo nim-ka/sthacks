@@ -1,13 +1,25 @@
+#!/bin/bash
+
 #ENTRY=0x80367460
 ENTRY=0x80400000
 FILE=main.s
 
 echo "Preparing assets..."
 
-for i in *.png; do
+for i in *.png page2/*.png page3/*.png; do
 	bin="${i%.*}"
+
+if ! [ -f "$bin" ]; then
 	tools/n64graphics -i "$bin" -g "$i" -f "${bin##*.}"
+fi
 done
+
+for i in *.textconv; do
+	asm="${i%.*}.s"
+	tools/textconv tools/charmap.txt "$i" "$asm"
+done
+
+cd audio
 
 for i in *.aiff; do
 	aiff="_$i"
@@ -15,17 +27,22 @@ for i in *.aiff; do
 	bin="${i%.*}.bin"
 	table="${i%.*}.table"
 
+if ! [ -f "$table.bin" ]; then
 	ffmpeg -y -i "$i" -ar 16000 "$aiff"
 
-	tools/aiff_extract_codebook "$aiff" > "$table"
+	../tools/aiff_extract_codebook "$aiff" > "$table"
 
-	tools/vadpcm_enc -c "$table" "$aiff" "$aifc"
+	../tools/vadpcm_enc -c "$table" "$aiff" "$aifc"
 	dd if="$aifc" of="$bin" bs=192 skip=1
 
 	dd if="$aifc" of=tmpa bs=112 skip=1; xxd tmpa | head -4 | xxd -r > "$table.bin"; rm tmpa
 
 	rm "$aiff" "$aifc" "$table"
+fi
+
 done
+
+cd ..
 
 echo "Unzipping..."
 
@@ -40,7 +57,7 @@ echo "Disassembling..."
 
 mips-linux-gnu-as -march=vr4300 -EB -G 0 "$FILE" -o "$FILE.o" || exit
 mips-linux-gnu-ld -A vr4300 -EB -Ttext="$ENTRY" -Map hacks.map "$FILE.o"
-DISASM="$(mips-linux-gnu-objdump -Dr a.out)"
+DISASM="$(mips-linux-gnu-objdump -Drz a.out)"
 rm "$FILE.o"
 
 printf "%s" "$DISASM" > a.out.s
